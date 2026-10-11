@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmartCalc Pro | Вау-Эффект</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <!-- Подключаем библиотеку для графиков -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
@@ -36,24 +35,22 @@
         .header { text-align: center; margin-bottom: 25px; }
         .header h1 { font-size: 28px; background: linear-gradient(135deg, var(--primary), var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-            /* --- ПРОФЕССИОНАЛЬНОЕ СВАЙП-МЕНЮ --- */
         .tabs { 
             display: flex; 
             gap: 12px; 
             margin-bottom: 25px; 
-            overflow-x: auto; /* Включаем горизонтальный свайп */
+            overflow-x: auto; 
             scroll-behavior: smooth;
-            -ms-overflow-style: none; /* Прячем системный ползунок скролла (Firefox/IE) */
+            -ms-overflow-style: none; 
             scrollbar-width: none; 
             padding: 5px 0;
         }
-        /* Прячем системный ползунок скролла (Chrome/Safari/iOS) */
         .tabs::-webkit-scrollbar { 
             display: none; 
         }
 
         .tab-btn { 
-            flex: 0 0 auto; /* Запрещаем кнопкам сжиматься */
+            flex: 0 0 auto; 
             background: rgba(0, 0, 0, 0.3); 
             border: 1px solid rgba(255, 255, 255, 0.05); 
             color: var(--text-muted); 
@@ -63,7 +60,7 @@
             border-radius: 15px; 
             cursor: pointer; 
             transition: all 0.3s ease; 
-            white-space: nowrap; /* Запрещаем тексту переноситься на вторую строку */
+            white-space: nowrap; 
         }
 
         .tab-btn.active { 
@@ -90,7 +87,7 @@
         .result-container { margin-top: 25px; padding: 20px; background: rgba(0,0,0,0.2); border-radius: 20px; border-top: 2px solid var(--accent); display: none; }
         .step-item { margin-bottom: 10px; color: #e2e8f0; animation: slideUpFade 0.4s forwards; }
         
-        /* Холст для графика */
+        
         #chartCanvas { margin-top: 20px; max-height: 250px; display: none; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -185,13 +182,13 @@
 
     <div id="resultBox" class="result-container">
         <div id="textResult"></div>
-        <!-- Место для графиков -->
+        
         <canvas id="chartCanvas"></canvas>
     </div>
 </div>
 
 <script>
-    let mathChart = null; // Переменная для хранения графика
+    let mathChart = null; 
 
     const i18n = {
         'ru': {
@@ -234,16 +231,16 @@
         event.currentTarget.classList.add('active');
     }
 
-    // --- Рисование Графика ---
+    
     function drawChart(type, params) {
         const ctx = document.getElementById('chartCanvas');
         ctx.style.display = 'block';
-        if (mathChart) mathChart.destroy(); // Удаляем старый график
+        if (mathChart) mathChart.destroy(); 
 
         let xValues = [], yValues = [];
         
         if (type === 'quadratic') {
-            // Рисуем параболу от -10 до 10 вокруг вершины
+            
             let vertexX = -params.b / (2 * params.a);
             if (isNaN(vertexX)) vertexX = 0;
             for (let x = vertexX - 5; x <= vertexX + 5; x += 0.5) {
@@ -251,7 +248,6 @@
                 yValues.push((params.a * Math.pow(x, 2) + params.b * x + params.c).toFixed(2));
             }
         } else if (type === 'linear') {
-            // Рисуем прямую y = (-b / a) -> Мы рисуем f(x) = ax + b
             for (let x = -10; x <= 10; x += 2) {
                 xValues.push(x);
                 yValues.push((params.a * x + params.b).toFixed(2));
@@ -265,7 +261,7 @@
                 datasets: [{
                     label: 'f(x)', data: yValues,
                     borderColor: '#00f2fe', borderWidth: 3, pointBackgroundColor: '#f093fb',
-                    fill: false, tension: 0.4 // Плавность линии
+                    fill: false, tension: 0.4 
                 }]
             },
             options: {
@@ -286,7 +282,7 @@
         
         resultBox.style.display = 'block';
         textResult.innerHTML = '<div style="color: var(--primary);">Считаем... ⚡</div>';
-        chartCanvas.style.display = 'none'; // Прячем график до ответа
+        chartCanvas.style.display = 'none'; 
 
         let url = `/${type === 'quadratic' ? 'solve_quadratic' : type === 'linear' ? 'solve_linear' : type === 'geometry' ? 'solve_geometry' : type === 'system' ? 'solve_system' : 'solve_progression'}`;
         let payload = { lang: currentLang };
@@ -328,7 +324,6 @@
                 textResult.appendChild(el);
             });
 
-            // Вызываем рисование графика, если это уравнение
             if (type === 'quadratic' || type === 'linear') {
                 drawChart(type, payload);
             }
